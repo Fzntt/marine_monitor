@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.marine.modules.generator.dao.WaterQualityDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.marine.modules.generator.entity.WaterQualityEntity" id="waterQualityMap">
+        <result property="id" column="id"/>
+        <result property="sea" column="sea"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="site" column="site"/>
+        <result property="lon" column="lon"/>
+        <result property="lat" column="lat"/>
+        <result property="minitorMonth" column="minitor_month"/>
+        <result property="ph" column="pH"/>
+        <result property="rjy" column="rjy"/>
+        <result property="hxxyl" column="hxxyl"/>
+        <result property="wjd" column="wjd"/>
+        <result property="hxlxy" column="hxlxy"/>
+        <result property="syl" column="syl"/>
+        <result property="szlb" column="szlb"/>
+    </resultMap>
+
+    <select id="selectWaterQualityData" resultType="io.marine.modules.generator.model.PositionValueVO">
+        SELECT
+            wq.lon,
+            wq.lat,
+            CASE #{fieldType}
+                WHEN 'PH' THEN wq.ph
+                WHEN 'RJY' THEN wq.rjy
+                WHEN 'HXXYL' THEN wq.hxxyl
+                WHEN 'WJD' THEN wq.wjd
+                WHEN 'HXLXY' THEN wq.hxlxy
+                WHEN 'SYL' THEN wq.syl
+                END AS 'value'
+        FROM `water_quality` wq
+        WHERE `year` = #{year} AND `month` = #{month}
+    </select>
+
+    <select id="selectLegendList" resultType="io.marine.modules.generator.model.LegendVO">
+        SELECT
+            `month`,
+            CASE #{type}
+                WHEN 'PH' THEN ROUND(AVG(wq.ph), 2)
+                WHEN 'RJY' THEN ROUND(AVG(wq.rjy), 2)
+                WHEN 'HXXYL' THEN ROUND(AVG(wq.hxxyl), 2)
+                WHEN 'WJD' THEN ROUND(AVG(wq.wjd), 2)
+                WHEN 'HXLXY' THEN ROUND(AVG(wq.hxlxy), 2)
+                WHEN 'SYL' THEN ROUND(AVG(wq.syl), 2)
+                END AS 'value'
+        FROM `water_quality` wq
+        WHERE `year` = #{year} and province = #{province}
+        GROUP BY `month`
+        order by `month`
+    </select>
+
+    <select id="selectWaterQualityPage" resultType="io.marine.modules.generator.entity.WaterQualityEntity">
+        select * from water_quality
+        where 1=1
+        <if test="params.year != null and params.year != ''">
+            and `year` = #{params.year}
+        </if>
+        <if test="params.month != null and params.month != ''">
+            and `month` = #{params.month}
+        </if>
+        <if test="params.province != null and params.province != ''">
+            and province = #{params.province}
+        </if>
+        order by  `year` desc,`month` desc
+    </select>
+
+
+</mapper>

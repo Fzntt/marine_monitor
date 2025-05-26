@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.marine.modules.generator.dao.WarnConfigDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.marine.modules.generator.entity.WarnConfigEntity" id="warnConfigMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="warnValue" column="warn_value"/>
+        <result property="prompt" column="prompt"/>
+    </resultMap>
+
+
+</mapper>
